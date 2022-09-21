@@ -8,9 +8,10 @@ import './style.css'
 import App from './App.vue'
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.use(ElementPlus)
-app.use(createPinia)
+app.use(pinia)
 app.use(router)
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

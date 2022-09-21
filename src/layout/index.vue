@@ -5,7 +5,7 @@
             <siderbarVue @changeCollapse="changeWidth"></siderbarVue>
          </el-aside>
          <el-main>
-            Main
+          <appViewerVue></appViewerVue>
          </el-main>
        </el-container>
      </div>
@@ -14,10 +14,15 @@
 <script setup>
 import { ref } from 'vue'
 import siderbarVue from './components/siderbar.vue'
+
+import appViewerVue from '../components/app-viewer.vue'
+
 const isChangeWd = ref(false)
+
 const changeWidth = (isCollapse) => {
   isChangeWd.value = isCollapse
 }
+
 </script>
 
 <style lang="scss" scoped>

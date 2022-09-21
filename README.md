@@ -5,3 +5,19 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+
+项目名称：基于Cesium的道路设计辅助系统
+
+技术栈：
+
+```javascript
+vue3
+vite
+vue-router
+pinia
+axios
+mockjs
+ElementPlus
+Cesium+Scss
+```
+
