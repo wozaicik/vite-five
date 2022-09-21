@@ -8,6 +8,10 @@ const routes = [
     component: Layout,
     children: [
       {
+        path: '/',
+        component: Layout
+      },
+      {
         path: '/:id',
         component: Layout
       }
