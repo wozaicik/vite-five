@@ -1,13 +1,13 @@
 export const siderbarOptions = [
   {
     id: 'A001',
-    name: '测量',
+    name: '测 量',
     path: 'measure',
     icon: 'Mic'
   },
   {
     id: 'B001',
-    name: '绘制图形',
+    name: '绘 制 图 形',
     icon: 'Edit',
     children: [
       { id: 'B001001', name: '添加地标', path: 'addpoint', icon: 'Location' },
