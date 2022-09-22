@@ -5,17 +5,18 @@
 <script  setup>
 import * as Cesium from 'cesium'
 import { ElMessage } from 'element-plus'
-import { onMounted } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import { useViewerStore } from '../store/viewer'
 
 // 获取 viewer的初始化状态 false：未加载 true：已加载
 const viewerData = useViewerStore()
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyMTM3YWEyZi0xOGJkLTQyZWEtODI2My1hZmViZTVlMzNkOTAiLCJpZCI6NTYwOTgsImlhdCI6MTY2MjM4ODY5MH0.kNGZQ6ZhNppF3FBRuAmvaNCeN69NdHSQq_9tHiovw2s'
 // 加载整个地球数据
+let viewer = null
 onMounted(() => {
   try {
     //  以下内容可在程序开头设置，主要设置基础控件和基础图层的属性，一般不在初始化Viewer时加载数据。
-    const viewer = new Cesium.Viewer('cesiumContainer', {
+    viewer = new Cesium.Viewer('cesiumContainer', {
       animation: false, // 是否创建动画小控件，即左下角的仪表，默认为TRUE
       baseLayerPicker: false, // 是否显示图层选择器，默认为TRUE
       fullscreenButton: false, // 是否显示全屏按钮，默认为TRUE
@@ -45,7 +46,12 @@ onMounted(() => {
     ElMessage.error(e)
   }
 })
-
+// 销毁
+onBeforeUnmount(() => {
+  viewer.destroy()
+  window.viewer = undefined
+  window.scene = undefined
+})
 </script>
 
 <style lang="scss" scoped>
