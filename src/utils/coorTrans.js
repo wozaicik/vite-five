@@ -1,5 +1,6 @@
 import { Cartographic, Math as cesiumMath } from 'cesium'
 import proj4 from 'proj4'
+import * as turf from '@turf/turf'
 
 /**
  * 输出经纬度、国家2000坐标
@@ -69,4 +70,35 @@ const lonLatToCGCS = (lonLat) => {
   const gsProj = proj4('EPSG:4326', 'EPSG:CGCS2000', [lonLat.x, lonLat.y])
 
   return { x: gsProj[0], y: gsProj[1], z: lonLat.z }
+}
+
+/**
+ *  计算两个点的距离和方位
+ * @param {Object} disPosition 第一个点
+ * @param {lonLat} lonLat   第二个点的经纬度
+ * @returns distance, bearing
+ */
+export const calDisBear = (oneLonLat, twoLonLat) => {
+  // 这里主要是为了第一次添加数据时，返回距离和方位角
+  if (!oneLonLat) {
+    return {
+      distance: 0,
+      bearing: 0
+    }
+  }
+  // 重命名数据 方便使用
+  // const oneLonLat = disPosition.lonLat
+  // const twoLonLat = lonLat
+
+  // 将坐标数据转换为turf的Geojson个数
+  // 将数据转为turf格式
+  const from = turf.point([oneLonLat.x, oneLonLat.y])
+  const to = turf.point([twoLonLat.x, twoLonLat.y])
+
+  // 使用经纬度 计算距离
+  const distance = turf.distance(from, to) * 1000
+  // 使用经纬度 计算方位
+  const bearing = turf.bearing(from, to)
+
+  return { distance, bearing }
 }

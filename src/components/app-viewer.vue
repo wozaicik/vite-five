@@ -1,5 +1,6 @@
 <template>
-    <div id="cesiumContainer" ref="viewer"></div>
+    <div id="cesiumContainer" ref="viewer">
+    </div>
 </template>
 
 <script  setup>

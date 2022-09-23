@@ -2,36 +2,41 @@
     <div class="common-layout">
        <el-container>
          <el-aside :width="isChangeWd?'64px':'200px'">
+          <!-- 侧边栏 -->
             <siderbarVue @changeCollapse="changeWidth"></siderbarVue>
          </el-aside>
          <el-main>
+            <!-- 显示地球的窗口 -->
             <appViewerVue></appViewerVue>
+            <!-- 动态的加载不同的功能模块 -->
+            <KeepAlive>
+              <component :is="activeMod" :key="activeMod"></component>
+            </KeepAlive>
          </el-main>
        </el-container>
      </div>
    </template>
 
 <script setup>
-import { useDistanceStore } from '../store/distance'
-import * as Cesium from 'cesium'
-import { ref } from 'vue'
+
+import { ref, watch } from 'vue'
 import siderbarVue from './components/siderbar.vue'
 
 import appViewerVue from '../components/app-viewer.vue'
+import { useRoute } from 'vue-router'
 
 const isChangeWd = ref(false)
-
 const changeWidth = (isCollapse) => {
   isChangeWd.value = isCollapse
 }
-const c3one = Cesium.Cartesian3.fromDegrees(113.3958888, 23.175833333, 300000.0)
-const c3two = Cesium.Cartesian3.fromDegrees(113.3978888, 23.175833333, 300000.0)
-const distance = useDistanceStore()
-distance.addPoint(c3one)
 
-distance.addPoint(c3two)
-distance.addPoint(c3two)
-console.log(distance.disPositions)
+// 监视路由的变化，动态加载不同的功能模块
+const route = useRoute()
+const activeMod = ref(null)
+watch(() => route.params.id, (newVal) => {
+  activeMod.value = newVal
+}, { immediate: true })
+
 </script>
 
 <style lang="scss" scoped>
