@@ -29,8 +29,10 @@ onMounted(() => {
       timeline: false, // 是否显示时间轴，默认为TRUE
       navigationHelpButton: false, // 是否显示右上角的帮助按钮，默认为TRUE
       scene3DOnly: false, // 如果设置为TRUE，则所有集合图形以三维模式绘制以节约GPU资源，默认为false
-      terrainProvider: Cesium.createWorldTerrain()
+      terrainProvider: Cesium.createWorldTerrain()// 加载地形
     })
+    viewer.scene.globe.depthTestAgainstTerrain = true// 设置为true 才能准确的获取坐标值
+    viewer.scene.postProcessStages.fxaa.enabled = false// 给文字去除锯齿
     // 去掉cesium左下角的版权标识
     viewer.cesiumWidget.creditContainer.style.display = 'none'
     // 判断是否已存在全局变量viewer
