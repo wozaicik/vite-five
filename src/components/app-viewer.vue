@@ -11,7 +11,7 @@ import { useViewerStore } from '../store/viewer'
 
 // 获取 viewer的初始化状态 false：未加载 true：已加载
 const viewerData = useViewerStore()
-Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyMTM3YWEyZi0xOGJkLTQyZWEtODI2My1hZmViZTVlMzNkOTAiLCJpZCI6NTYwOTgsImlhdCI6MTY2MjM4ODY5MH0.kNGZQ6ZhNppF3FBRuAmvaNCeN69NdHSQq_9tHiovw2s'
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0NjRhOTQ5ZS05OGVhLTRjYzYtOWM4NC0zMWNjNjRmMTRiYjAiLCJpZCI6NTYwOTgsImlhdCI6MTY2NDEwNDM1Mn0.14ncJIklRIf4qm3EDZKPfTY_j3iB0CyBHQSku0wihxU'
 // 加载整个地球数据
 let viewer = null
 onMounted(() => {

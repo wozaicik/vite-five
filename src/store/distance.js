@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
-import { coorColl, calDisBear } from '../utils/coorTrans'
+import { coorColl, calDisBear, calCenter } from '../utils/coorTrans'
 import * as Cesium from 'cesium'
 
 //   { number: 0, cartesian3: null, lonLat: null, distance: 0, bearing: 0 }
@@ -15,6 +15,8 @@ export const useDistanceStore = defineStore('distance', {
     // 存储所有的entity数据，便于遍历移除
     distanceEntities: []
 
+    // // 存储中心点
+    // center: []
   }),
 
   actions: {
@@ -29,12 +31,12 @@ export const useDistanceStore = defineStore('distance', {
       const { distance, bearing } = calDisBear(this.disPositions[0]?.lonLat, lonLat)
 
       this.disPositions.push({
-        number: this.length,
-        cartesian3,
-        lonLat,
-        gsProj,
-        distance: distance.toFixed(3),
-        bearing: bearing.toFixed(3)
+        number: this.length, // 序号
+        cartesian3, // 笛卡尔空间直角坐标
+        lonLat, // 经纬度
+        gsProj, // 高斯投影国家2000坐标
+        distance: distance.toFixed(3), // 距离
+        bearing: bearing.toFixed(3) // 方位角
       })
       this.length++
     },
@@ -45,6 +47,7 @@ export const useDistanceStore = defineStore('distance', {
       const car3Array = this.getCar3Array
       // 当只有一个坐标点时，只添加一个点
       if (car3Array.length === 1) {
+        // 拿到第一个点的cartesian3的坐标
         const itemCoor = toRaw(car3Array[0])
         this.distanceEntities.push(viewer.entities.add({
           position: itemCoor,
@@ -58,8 +61,15 @@ export const useDistanceStore = defineStore('distance', {
         }))
       }
       // 当只有二个坐标点时，只添加一个点和一条线段
+
       if (car3Array.length === 2) {
+        // 拿到第二点的坐标
         const itemCoor = toRaw(car3Array[1])
+        // 拿到中心点坐标
+        const center = this.getCenterCoor
+        // 需要注释的距离
+        const disText = this.disPositions[1].distance.toString()
+        // 添加第二个点和线段
         this.distanceEntities.push(viewer.entities.add({
           position: itemCoor,
           point: {
@@ -74,6 +84,20 @@ export const useDistanceStore = defineStore('distance', {
             width: 3,
             material: Cesium.Color.RED,
             clampToGround: true
+          }
+        }))
+        // 把距离显示在线段的中间
+        this.distanceEntities.push(viewer.entities.add({
+          position: Cesium.Cartesian3.fromDegrees(center[0], center[1]),
+          label: {
+            text: disText,
+            font: '16px sans-serif',
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            outlineWidth: 2,
+            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+            verticalOrigin: Cesium.VerticalOrigin.BASELINE,
+            pixelOffset: new Cesium.Cartesian2(0, -10),
+            disableDepthTestDistance: Number.POSITIVE_INFINITY // draws the label in front of terrain
           }
         }))
       }
@@ -95,6 +119,11 @@ export const useDistanceStore = defineStore('distance', {
     // 返回两个点的cartesian3坐标数组
     getCar3Array () {
       return this.disPositions.map(item => item.cartesian3)
+    },
+    // 返回两个点的中心经纬度
+    getCenterCoor () {
+      const center = calCenter(this.disPositions[0]?.lonLat, this.disPositions[1]?.lonLat)
+      return center
     }
   }
 
