@@ -16,7 +16,20 @@
           </div>
          <subDistanceVue :coor-option="coorOption" :pane-name="tabPaneName"></subDistanceVue>
       </el-tab-pane>
-      <el-tab-pane label="线 段" name="polyline">线 段</el-tab-pane>
+      <el-tab-pane label="线 段" name="polyline">
+        <div class="desc">
+            <span >测量地面上多个点之间的距离</span>
+            <el-select v-model="coorOption"  placeholder="gsProj" size="small">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+            </el-select>
+          </div>
+        <subPolylineVue :coor-option="coorOption" :pane-name="tabPaneName"></subPolylineVue>
+      </el-tab-pane>
       <el-tab-pane label="面 积" name="area">面 积</el-tab-pane>
       <el-tab-pane label="圆" name="circle">圆</el-tab-pane>
       <el-tab-pane label="坡 度 坡 向" name="slopeAspect">坡度 坡向</el-tab-pane>
@@ -34,13 +47,15 @@
 <script >
 import { defineComponent, onMounted, provide, ref } from 'vue'
 import subDistanceVue from '../sub-distance.vue'
+import subPolylineVue from '../sub-polyline.vue'
 import * as Cesium from 'cesium'
 import { useViewerStore } from '../../store/viewer'
 
 export default defineComponent({
   name: 'Measure',
   components: {
-    subDistanceVue
+    subDistanceVue,
+    subPolylineVue
   },
   setup () {
     // 绑定值，选中选项卡的 name
@@ -105,8 +120,8 @@ const getCoor = (tabsCar3) => {
 position: absolute;
 right: 5px;
 top: 5px;
-height: 300px;
-width:550px;
+height: 60%;
+width:500px;
 .el-tabs{
   height: 100%;
   width: 100%;

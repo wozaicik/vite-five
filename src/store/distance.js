@@ -35,8 +35,8 @@ export const useDistanceStore = defineStore('distance', {
         cartesian3, // 笛卡尔空间直角坐标
         lonLat, // 经纬度
         gsProj, // 高斯投影国家2000坐标
-        distance: distance.toFixed(3), // 距离
-        bearing: bearing.toFixed(3) // 方位角
+        distance: distance.toFixed(2), // 距离
+        bearing: bearing.toFixed(2) // 方位角
       })
       this.length++
     },

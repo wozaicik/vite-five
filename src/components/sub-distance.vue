@@ -6,11 +6,11 @@
             <el-table-column prop="gsProj" label=" X ------ Y ------ Z " align="center">
                 <template #default="scope">
                     <!-- 将坐标数据进行拼接 -->
-                    <span v-for="(item,i) in scope.row[props.coorOption]" :key="i" style="margin-left: 15px">{{item.toFixed(3)}}</span>
+                    <span v-for="(item,i) in scope.row[props.coorOption]" :key="i" style="margin-left: 10px">{{item.toFixed(3)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="distance" label="距离" width="85" align="center"/>
-            <el-table-column prop="bearing" label="方位" width="85" align="center"/>
+            <el-table-column prop="distance" label="距离" width="80" align="center"/>
+            <el-table-column prop="bearing" label="方位" width="80" align="center"/>
         </el-table>
     </div>
   </template>
@@ -27,6 +27,7 @@ const props = defineProps({
   // 激活子组件的名称
   paneName: { type: String, default: 'dis' }
 })
+// 本组件的名称
 const componentName = 'distance'
 // 获取distance存储库
 const distance = useDistanceStore()
