@@ -42,9 +42,10 @@ export const useDistanceStore = defineStore('distance', {
     },
     // 绘制点和线段
     draw () {
-      const viewer = window.viewer
+      let viewer = window.viewer
       // 获得cartesian3的坐标数组
       const car3Array = this.getCar3Array
+      const toRawcar3Array = toRaw(car3Array)
       // 当只有一个坐标点时，只添加一个点
       if (car3Array.length === 1) {
         // 拿到第一个点的cartesian3的坐标
@@ -80,7 +81,7 @@ export const useDistanceStore = defineStore('distance', {
             heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
           },
           polyline: {
-            positions: toRaw(car3Array),
+            positions: toRawcar3Array,
             width: 3,
             material: Cesium.Color.RED,
             clampToGround: true
@@ -101,6 +102,7 @@ export const useDistanceStore = defineStore('distance', {
           }
         }))
       }
+      viewer = null
     },
     // 清除所有存储entity数据
     clear () {

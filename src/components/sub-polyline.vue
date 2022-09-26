@@ -1,6 +1,6 @@
 <template>
     <div class="subpolyline"  v-if="componentName===props.paneName">
-        <el-table :data="positions" height="280px"  border style="width: 100%">
+        <el-table :data="dispolyline.positions" height="280px"  border style="width: 100%">
             <el-table-column type="index"  width="43" align="center"/>
             <el-table-column prop="gsProj" label=" X ------ Y ------ Z " align="center">
                 <template #default="scope">
@@ -15,7 +15,7 @@
   </template>
 
 <script  setup>
-import { storeToRefs } from 'pinia'
+// import { storeToRefs } from 'pinia'
 import { inject, watch } from 'vue'
 import { useDisPolylineStore } from '../store/disPolyline'
 
@@ -32,7 +32,7 @@ const componentName = 'polyline'
 const dispolyline = useDisPolylineStore()
 
 // 将存储库中的positions设置为响应式
-const { positions } = storeToRefs(dispolyline)
+// const { positions } = storeToRefs(dispolyline)
 
 // 通过注入获得父组件中存储的坐标值
 const tabsCar3 = inject('tabsCar3')

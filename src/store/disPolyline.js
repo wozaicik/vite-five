@@ -2,16 +2,19 @@ import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
 import { calCenter, calDisBear, coorColl } from '../utils/coorTrans'
 import * as Cesium from 'cesium'
+import { terrainPositions } from '../utils/sectionalView'
 
 export const useDisPolylineStore = defineStore('dispolyline', {
   state: () => ({
     // 存储所有的坐标点
     positions: [],
     // 存所有的entity
-    entities: []
+    entities: [],
+    // 存储断面图的数据
+    data: []
   }),
   actions: {
-    addPositions (cartesian3) {
+    async addPositions (cartesian3) {
       // 根据cartesian3坐标计算经纬度 国家2000投影下的坐标
       const { lonLat, gsProj } = coorColl(cartesian3)
       //   计算与上一点的距离
@@ -20,6 +23,19 @@ export const useDisPolylineStore = defineStore('dispolyline', {
       const center = calCenter(this.positions[this.positions.length - 1]?.lonLat, lonLat)
       // 计算总距离
       const distanceSum = this.getDistanceSum + distance
+      // 插值计算两个点之间的里程和高程
+      terrainPositions(
+        this.positions[this.positions.length - 1]?.lonLat,
+        lonLat,
+        distance,
+        this.positions.length,
+        this.getDistanceSum
+      ).then(
+        (data) => {
+          this.data.push(...data)
+        })
+      // console.log(this.data)
+
       this.positions.push({
         cartesian3, // 笛卡尔空间直角坐标
         lonLat, // 经纬度
@@ -31,7 +47,7 @@ export const useDisPolylineStore = defineStore('dispolyline', {
       })
     },
     draw () {
-      const viewer = window.viewer
+      let viewer = window.viewer
       // 获得cartesian3的坐标数组
       const car3Array = this.getCar3Array
       //   拿到最后一个点的坐标数据
@@ -47,33 +63,36 @@ export const useDisPolylineStore = defineStore('dispolyline', {
           heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
         }
       }))
-      //   console.log(this.positions[this.positions.length - 1])
+      if (car3Array.length >= 2) {
+        //   console.log(this.positions[this.positions.length - 1])
       //   拿到最后一个点的数据，解构出 距离和中心坐标
-      const { distance, center } = this.positions[this.positions.length - 1]
-      this.entities.push(viewer.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(center[0], center[1]),
-        label: {
-          text: distance.toString(),
-          font: '16px sans-serif',
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          outlineWidth: 2,
-          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-          verticalOrigin: Cesium.VerticalOrigin.BASELINE,
-          pixelOffset: new Cesium.Cartesian2(0, -10),
-          disableDepthTestDistance: Number.POSITIVE_INFINITY // draws the label in front of terrain
-        }
-      }))
-      //   每次添加线段之前，都移除 旧的线段，在添加新的线段
-      viewer.entities.removeById('dispolyline')
-      this.entities.push(viewer.entities.add({
-        id: 'dispolyline',
-        polyline: {
-          positions: toRaw(car3Array),
-          width: 3,
-          material: Cesium.Color.RED,
-          clampToGround: true
-        }
-      }))
+        const { distance, center } = this.positions[this.positions.length - 1]
+        this.entities.push(viewer.entities.add({
+          position: Cesium.Cartesian3.fromDegrees(center[0], center[1]),
+          label: {
+            text: distance.toString(),
+            font: '16px sans-serif',
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            outlineWidth: 2,
+            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+            verticalOrigin: Cesium.VerticalOrigin.BASELINE,
+            pixelOffset: new Cesium.Cartesian2(0, -10),
+            disableDepthTestDistance: Number.POSITIVE_INFINITY // draws the label in front of terrain
+          }
+        }))
+        //   每次添加线段之前，都移除 旧的线段，在添加新的线段
+        viewer.entities.removeById('dispolyline')
+        this.entities.push(viewer.entities.add({
+          id: 'dispolyline',
+          polyline: {
+            positions: toRaw(car3Array),
+            width: 3,
+            material: Cesium.Color.RED,
+            clampToGround: true
+          }
+        }))
+      }
+      viewer = null
     },
     // 清除所有存储entity数据
     clear () {
@@ -86,6 +105,9 @@ export const useDisPolylineStore = defineStore('dispolyline', {
       })
       this.entities = []
     }
+    // calSectionlView () {
+    //   // terrainPositions(this.positions[this.positions.length - 1]?.lonLat, lonLat, distance)
+    // }
   },
   getters: {
     // 返回多个点的cartesian3坐标数组

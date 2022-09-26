@@ -32,7 +32,7 @@ onMounted(() => {
       terrainProvider: Cesium.createWorldTerrain()// 加载地形
     })
     viewer.scene.globe.depthTestAgainstTerrain = true// 设置为true 才能准确的获取坐标值
-    viewer.scene.postProcessStages.fxaa.enabled = false// 给文字去除锯齿
+    // viewer.scene.postProcessStages.fxaa.enabled = false// 给文字去除锯齿
     // 去掉cesium左下角的版权标识
     viewer.cesiumWidget.creditContainer.style.display = 'none'
     // 判断是否已存在全局变量viewer
