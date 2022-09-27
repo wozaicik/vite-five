@@ -1,7 +1,7 @@
 import * as Cesium from 'cesium'
 
 /**
- *
+ * let data = [[里程, 高程]];
  * @param {Object} oneLonLat 第一个点经纬度
  * @param {Object} twoLonLat 第二个点的经纬
  * @param {Number} distance 第一个点与第二点之间的距离
@@ -15,14 +15,8 @@ export const terrainPositions = async (oneLonLat, twoLonLat, distance, arrayLeng
   }
   // 存储插值的到的里程和高程点 [[里程,高程]]
   const data = []
-  // 插值的个数
-  const length = 50
-  // 计算里程
-  const step = distance / (length - 1)
-  const mileage = []
-  for (let i = 0; i < length; i++) {
-    mileage.push(i * step)
-  }
+  const length = 10
+  const mileage = calMileage(distance)
   /// ////////
   // 计算每个插值点的坐标和高程
   const viewer = window.viewer
@@ -76,6 +70,18 @@ export const terrainPositions = async (oneLonLat, twoLonLat, distance, arrayLeng
     }
   })
   return data
+}
+
+const calMileage = (distance) => {
+  // 插值的个数
+  const length = 10
+  // 计算里程
+  const step = distance / (length - 1)
+  const mileage = []
+  for (let i = 0; i < length; i++) {
+    mileage.push(i * step)
+  }
+  return mileage
 }
 
 // const calMileage = (distance) => {

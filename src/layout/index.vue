@@ -25,7 +25,7 @@ import siderbarVue from './components/siderbar.vue'
 import appViewerVue from '../components/app-viewer.vue'
 import { useRoute } from 'vue-router'
 
-const isChangeWd = ref(false)
+const isChangeWd = ref(true)
 const changeWidth = (isCollapse) => {
   isChangeWd.value = isCollapse
 }

@@ -12,6 +12,9 @@ import 'normalize.css'
 // 导入自己的ui组件库
 import UI from '@/components/library/index'
 
+import * as echarts from 'echarts'
+window.echarts = echarts // 挂载到window上
+
 const app = createApp(App)
 const pinia = createPinia()
 

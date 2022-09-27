@@ -48,7 +48,7 @@ import { siderbarOptions } from '@/api/constants.js'
 import { ref } from 'vue'
 const emit = defineEmits(['changeCollapse'])
 
-const isCollapse = ref(false)
+const isCollapse = ref(true)
 
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value

@@ -40,7 +40,8 @@
           <el-button size="small"  type="info" round>取消</el-button>
           <el-button size="small"  type="info" round>关闭</el-button>
         </el-col>
-      </el-row>
+    </el-row>
+    <ViteSection></ViteSection>
   </div>
 </template>
 
@@ -120,7 +121,7 @@ const getCoor = (tabsCar3) => {
 position: absolute;
 right: 5px;
 top: 5px;
-height: 60%;
+height: 55%;
 width:500px;
 .el-tabs{
   height: 100%;
@@ -140,7 +141,7 @@ margin-right: 10px;
 }
 
 .desc{
-  margin-top: 10px;
+margin-top: 5px;
 display: flex;
 align-items:center;
 justify-content:space-around;

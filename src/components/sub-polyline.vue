@@ -1,6 +1,6 @@
 <template>
     <div class="subpolyline"  v-if="componentName===props.paneName">
-        <el-table :data="dispolyline.positions" height="280px"  border style="width: 100%">
+        <el-table :data="dispolyline.positions" height="370px"  border style="width: 100%">
             <el-table-column type="index"  width="43" align="center"/>
             <el-table-column prop="gsProj" label=" X ------ Y ------ Z " align="center">
                 <template #default="scope">
@@ -11,11 +11,18 @@
             <el-table-column prop="distance" label="距离" width="75" align="center"/>
             <el-table-column prop="distanceSum" label="总距离" width="82" align="center"/>
         </el-table>
+        <el-switch
+          v-model="isOpenSection"
+          size="small"
+          active-text="Open"
+          inactive-text="打开断面图"
+        />
     </div>
   </template>
 
 <script  setup>
 // import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia'
 import { inject, watch } from 'vue'
 import { useDisPolylineStore } from '../store/disPolyline'
 
@@ -42,13 +49,22 @@ watch(() => tabsCar3.value, () => {
   if (componentName === props.paneName) {
     dispolyline.addPositions(tabsCar3?.value)
     dispolyline.draw()
+    // dispolyline.calSectionlView()
   }
 })
+
+const { isOpen: isOpenSection } = storeToRefs(dispolyline)
+watch(() => isOpenSection.value, (newVal) => {
+  if (newVal) {
+    dispolyline.isOpen = newVal
+  }
+}, { immediate: true })
+
 </script>
 
 <style lang="scss" scoped>
 .el-table{
     height: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 </style>

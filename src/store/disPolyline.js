@@ -11,10 +11,10 @@ export const useDisPolylineStore = defineStore('dispolyline', {
     // 存所有的entity
     entities: [],
     // 存储断面图的数据
-    data: []
+    isOpen: false
   }),
   actions: {
-    async addPositions (cartesian3) {
+    addPositions (cartesian3) {
       // 根据cartesian3坐标计算经纬度 国家2000投影下的坐标
       const { lonLat, gsProj } = coorColl(cartesian3)
       //   计算与上一点的距离
@@ -23,18 +23,6 @@ export const useDisPolylineStore = defineStore('dispolyline', {
       const center = calCenter(this.positions[this.positions.length - 1]?.lonLat, lonLat)
       // 计算总距离
       const distanceSum = this.getDistanceSum + distance
-      // 插值计算两个点之间的里程和高程
-      terrainPositions(
-        this.positions[this.positions.length - 1]?.lonLat,
-        lonLat,
-        distance,
-        this.positions.length,
-        this.getDistanceSum
-      ).then(
-        (data) => {
-          this.data.push(...data)
-        })
-      // console.log(this.data)
 
       this.positions.push({
         cartesian3, // 笛卡尔空间直角坐标
@@ -104,10 +92,23 @@ export const useDisPolylineStore = defineStore('dispolyline', {
         }
       })
       this.entities = []
+    },
+    async  calSectionlView () {
+      if (this.positions.length < 2) return
+      // 插值计算两个点之间的里程和高程
+      const dataSection = []
+      const LonLatArr = this.getLonLatArr
+      const DistanceArr = this.getDistanceArr
+      const DistanceSumArr = this.getDistanceSumArr
+      for (let i = 0; i < LonLatArr.length - 1; i++) {
+        await terrainPositions(LonLatArr[i], LonLatArr[i + 1], DistanceArr[i + 1], i + 1, DistanceSumArr[i]).then(
+          data => {
+            dataSection.push(...data)
+          }
+        )
+      }
+      return dataSection
     }
-    // calSectionlView () {
-    //   // terrainPositions(this.positions[this.positions.length - 1]?.lonLat, lonLat, distance)
-    // }
   },
   getters: {
     // 返回多个点的cartesian3坐标数组
@@ -122,6 +123,15 @@ export const useDisPolylineStore = defineStore('dispolyline', {
         0
       )
       return sumWithInitial
+    },
+    getLonLatArr () {
+      return this.positions.map(item => item.lonLat)
+    },
+    getDistanceArr () {
+      return this.positions.map(item => item.distance)
+    },
+    getDistanceSumArr () {
+      return this.positions.map(item => item.distanceSum)
     }
   }
 })
@@ -131,3 +141,15 @@ export const useDisPolylineStore = defineStore('dispolyline', {
 //   (previousValue, currentValue) => previousValue + currentValue,
 //   initialValue
 // );
+// if (this.positions.length >= 2) {
+//   terrainPositions(
+//     this.positions[this.positions.length - 2]?.lonLat,
+//     this.positions[this.positions.length - 1]?.lonLat,
+//     this.positions[this.positions.length - 1].distance,
+//     this.positions.length - 1,
+//     this.positions[this.positions.length - 2].distanceSum
+//   ).then(
+//     (data) => {
+//       this.data.push(...data)
+//     })
+// // }
