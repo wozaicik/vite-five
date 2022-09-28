@@ -10,7 +10,7 @@ export const useDisPolylineStore = defineStore('dispolyline', {
     positions: [],
     // 存所有的entity
     entities: [],
-    // 存储断面图的数据
+    // 是否打开断面图
     isOpen: false
   }),
   actions: {

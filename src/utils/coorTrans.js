@@ -1,6 +1,7 @@
 import { Cartographic, Math as cesiumMath } from 'cesium'
 import proj4 from 'proj4'
 import * as turf from '@turf/turf'
+import { toRaw } from 'vue'
 
 /**
  * 输出经纬度、国家2000坐标
@@ -125,6 +126,31 @@ export const calCenter = (oneLonLat, twoLonLat) => {
   center = centers.geometry.coordinates
   // console.log(center)
   return center
+}
+
+export const calArea = (polygon) => {
+  const polygonRaw = toRaw(polygon)
+  if (!polygonRaw || polygonRaw.length <= 3) {
+    return 0
+  } else {
+    console.log(...polygonRaw, polygonRaw[0])
+    const calPolygon = turf.polygon([[...polygonRaw, polygonRaw[0]]])
+    const area = turf.area(calPolygon)
+    return area
+  }
+}
+
+export const calCentroid = (polygon) => {
+  // 计算中心中，绘制图形所用
+  const polygonToRaw = toRaw(polygon)
+  if (!polygonToRaw || polygonToRaw.length < 3) {
+    return 0
+  } else {
+    const calPolygon = turf.polygon([[...polygonToRaw, polygonToRaw[0]]])
+    const Centroid = turf.centroid(calPolygon)
+    console.log(Centroid.geometry.coordinates)
+    return Centroid
+  }
 }
 
 // This example illustrates a Callback Property, a property whose

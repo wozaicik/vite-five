@@ -30,7 +30,20 @@
           </div>
         <subPolylineVue :coor-option="coorOption" :pane-name="tabPaneName"></subPolylineVue>
       </el-tab-pane>
-      <el-tab-pane label="面 积" name="area">面 积</el-tab-pane>
+      <el-tab-pane label="面 积" name="area">
+        <div class="desc">
+            <span >测量地面上多个点之间的面积</span>
+            <el-select v-model="coorOption"  placeholder="gsProj" size="small">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+            </el-select>
+          </div>
+          <subAreaVue :coor-option="coorOption" :pane-name="tabPaneName"></subAreaVue>
+      </el-tab-pane>
       <el-tab-pane label="圆" name="circle">圆</el-tab-pane>
       <el-tab-pane label="坡 度 坡 向" name="slopeAspect">坡度 坡向</el-tab-pane>
     </el-tabs>
@@ -49,6 +62,7 @@
 import { defineComponent, onMounted, provide, ref } from 'vue'
 import subDistanceVue from '../sub-distance.vue'
 import subPolylineVue from '../sub-polyline.vue'
+import subAreaVue from '../sub-area.vue'
 import * as Cesium from 'cesium'
 import { useViewerStore } from '../../store/viewer'
 
@@ -56,7 +70,8 @@ export default defineComponent({
   name: 'Measure',
   components: {
     subDistanceVue,
-    subPolylineVue
+    subPolylineVue,
+    subAreaVue
   },
   setup () {
     // 绑定值，选中选项卡的 name
